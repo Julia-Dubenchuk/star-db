@@ -1,0 +1,14 @@
+.error-indicator {
+    width: 100%;
+    text-align: center;
+}
+
+.error-indicator span {
+    display: inline-block;
+    width: 100%;
+}
+
+.error-indicator .boom {
+    font-size: 1.6rem;
+}
+
