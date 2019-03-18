@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 
-import './person-details.css';
 import SwapiService from '../../services/swapi-service';
+import Spinner from '../spinner';
+
+import './person-details.css';
 
 export default class PersonDetails extends Component {
 
     swapiService = new SwapiService();
 
     state = {
-        person: null
+        person: null,
+        loading: true
     };
 
     componentDidMount() {
@@ -23,6 +26,9 @@ export default class PersonDetails extends Component {
 
     updatePerson() {
         const { personId } = this.props;
+        this.setState({
+            loading: true
+        })
         if (!personId) {
             return;
         }
@@ -30,22 +36,40 @@ export default class PersonDetails extends Component {
         this.swapiService
             .getPerson(personId)
             .then((person) => {
-                this.setState({ person });
+                this.setState({ 
+                    person: person,
+                    loading: false
+                 });
             })
     }
 
     render() {
+        const { person, loading } = this.state;
 
-        if (!this.state.person) {
-            return <span>Select a person from a list</span>
-        }
-
-        const { id, name, gender,
-                birthYear, eyeColor } = this.state.person;
+        const spinner = loading ? <Spinner /> : null;
+        const content = !loading ? <PersonView person={person} /> : null;
 
         return (
             <div className="person-details card">
-                <img className="person-image"
+               {spinner}
+               {content}
+            </div>
+        );
+
+    }
+};
+
+const PersonView = ({ person }) => {
+
+    if (!person) {
+        return <span>Select a person from a list</span>
+    }
+
+    const { id, name, gender,
+        birthYear, eyeColor } = person;
+    return (
+        <React.Fragment>
+             <img className="person-image"
                     src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`} alt="character"/>
 
                 <div className="card-body">
@@ -65,8 +89,6 @@ export default class PersonDetails extends Component {
                         </li>
                     </ul>
                 </div>
-            </div>
-        );
-
-    }
+        </React.Fragment>
+    );
 };
