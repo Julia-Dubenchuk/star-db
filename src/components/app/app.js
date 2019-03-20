@@ -51,7 +51,7 @@ export default class App extends Component {
                 getData={getPerson}
                 getImageUrl={getPersonImage} >
                 <Record field="gender" label="Gender" />
-                <Record field="" label="Eye Color" />
+                <Record field="eyeColor" label="Eye Color" />
                 </ItemDetails>
         );
 
@@ -61,24 +61,24 @@ export default class App extends Component {
                 getData={getStarship}
                 getImageUrl={getStarshipImage}
                 >
-                   
-                </ItemDetails>
+                <Record field="model" label="Model" />
+                <Record field="length" label="Length" />
+                <Record field="costInCredits" label="Cost" />
+            </ItemDetails>
         );
 
         return (
             <ErrorBoundry>
                 <div className="container col-lg-10">
                     <Header />
-                    {/* { planet }
+                    { planet }
 
                     <button
                         className="toggle-planet btn btn-warning btn-lg mb-4"
                         onClick={this.toggleRandomPlanet}>
                         Toggle Random Planet
                     </button>
-                    <ErrorButton /> */}
-
-                    {/* <PeoplePage /> */}
+                   
                     <Row
                         left={personDetails}
                         right={starshipDetails} />

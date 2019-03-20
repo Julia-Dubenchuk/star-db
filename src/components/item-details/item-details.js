@@ -61,7 +61,7 @@ export default class ItemDetails extends Component {
         const { item, loading, image } = this.state;
         const spinner = loading ? <Spinner /> : null;
         const content = !loading ? <ItemView item={item} image={image} 
-        child={React.Children.map(this.props.children, (child, idx) => {
+        child={React.Children.map(this.props.children, (child) => {
             return React.cloneElement(child, { item });
         }) } /> : null;
 
