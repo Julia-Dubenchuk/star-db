@@ -6,13 +6,25 @@ import ErrorButton from '../error-button';
 
 import './item-details.css';
 
+const Record = ({item, field, label }) => {
+    return (
+        <li className="list-group-item">
+            <span className="term">{label}</span>
+            <span>{ item[field] }</span>
+        </li>
+    );
+};
+
+export { Record };
+
 export default class ItemDetails extends Component {
 
     swapiService = new SwapiService();
 
     state = {
         item: null,
-        loading: true
+        loading: true,
+        image: null
     };
 
     componentDidMount() {
@@ -26,7 +38,7 @@ export default class ItemDetails extends Component {
     }
 
     updatePerson() {
-        const { getData, itemId } = this.props;
+        const { getData, itemId, getImageUrl } = this.props;
         this.setState({
             loading: true
         })
@@ -34,21 +46,24 @@ export default class ItemDetails extends Component {
             return;
         }
 
-        console.log('dd', this.props);
-
-        getData(itemId).then((item) => {
+        getData(itemId)
+            .then((item) => {
                 console.log('it', item);
                 this.setState({ 
                     item: item,
-                    loading: false
+                    loading: false,
+                    image: getImageUrl(item)
                  });
             })
     }
 
     render() {
-        const { item, loading } = this.state;
+        const { item, loading, image } = this.state;
         const spinner = loading ? <Spinner /> : null;
-        const content = !loading ? <ItemView item={item} /> : null;
+        const content = !loading ? <ItemView item={item} image={image} 
+        child={React.Children.map(this.props.children, (child, idx) => {
+            return React.cloneElement(child, { item });
+        }) } /> : null;
 
         return (
             <div className="item-details card">
@@ -60,7 +75,7 @@ export default class ItemDetails extends Component {
     }
 };
 
-const ItemView = ( {item }) => {
+const ItemView = ( { item, image, child }) => {
     if (!item) {
         return <span>Select a person from a list</span>
     }
@@ -70,23 +85,12 @@ const ItemView = ( {item }) => {
     return (
         <React.Fragment>
              <img className="item-image"
-                    src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`} alt="character"/>
+                    src={image} alt="character"/>
 
                 <div className="card-body">
                     <h4>{ name }</h4>
                     <ul className="list-group list-group-flush mb-4">
-                        <li className="list-group-item">
-                            <span className="term">Gender</span>
-                            <span>{ gender }</span>
-                        </li>
-                        <li className="list-group-item">
-                            <span className="term">Birth Year</span>
-                            <span>{ birthYear }</span>
-                        </li>
-                        <li className="list-group-item">
-                            <span className="term">Eye Color</span>
-                            <span>{ eyeColor }</span>
-                        </li>
+                        {child}
                     </ul>
                     <ErrorButton />
                 </div>
