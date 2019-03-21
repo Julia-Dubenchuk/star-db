@@ -81,10 +81,14 @@ export default class App extends Component {
             <ErrorBoundry>
                 <div className="container col-lg-10">
                     <Header />
+
+                    <PersonDetails itemId={11} />
+                    <PlanetDetails itemId={5} />
+                    <StarshipDetails itemId={9} />
                    
-                    <PersonList>
-                        {({name}) => <span>{name}</span>}
-                    </PersonList>
+                    <PersonList />
+                    <PlanetList />
+                    <StarshipList />
 
 
                 </div>

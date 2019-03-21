@@ -4,12 +4,12 @@ import './item-list.css';
 
 const ItemList = (props) => {
 
-    const { data } = props;
+    const { data, onItemSelected, children: renderLabel } = props;
 
 
     const items = data.map((item) => {
         console.log('itt', item);
-            const { id, onItemSelected, children: renderLabel } = item;
+            const { id } = item;
             const label = renderLabel(item);
             return (
                 <li className="list-group-item"
