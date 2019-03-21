@@ -8,7 +8,17 @@ import Row from '../row';
 import ItemDetails, { Record } from '../item-details';
 import SwapiService from '../../services/swapi-service';
 
+import {
+    PersonDetails,
+    PlanetDetails,
+    StarshipDetails,
+    PersonList,
+    PlanetList,
+    StarshipList
+} from '../sw-components';
+
 import './app.css';
+import { spawn } from 'child_process';
 
 export default class App extends Component {
 
@@ -71,17 +81,12 @@ export default class App extends Component {
             <ErrorBoundry>
                 <div className="container col-lg-10">
                     <Header />
-                    { planet }
-
-                    <button
-                        className="toggle-planet btn btn-warning btn-lg mb-4"
-                        onClick={this.toggleRandomPlanet}>
-                        Toggle Random Planet
-                    </button>
                    
-                    <Row
-                        left={personDetails}
-                        right={starshipDetails} />
+                    <PersonList>
+                        {({name}) => <span>{name}</span>}
+                    </PersonList>
+
+
                 </div>
             </ErrorBoundry>
         );

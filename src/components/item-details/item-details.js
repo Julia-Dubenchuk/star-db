@@ -80,8 +80,7 @@ const ItemView = ( { item, image, child }) => {
         return <span>Select a person from a list</span>
     }
 
-    const { id, name, gender,
-        birthYear, eyeColor } = item;
+    const { name } = item;
     return (
         <React.Fragment>
              <img className="item-image"
