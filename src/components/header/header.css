@@ -17,3 +17,8 @@
 .header h3 a {
     color: var(--white);
 }
+
+.header button {
+    height: 2.2rem;
+    margin-top: 3px;
+}

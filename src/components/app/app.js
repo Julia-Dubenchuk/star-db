@@ -1,97 +1,56 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Header from '../header';
 import RandomPlanet from '../random-planet';
 import ErrorBoundry from '../error-boundry';
-
-import Row from '../row';
-import ItemDetails, { Record } from '../item-details';
 import SwapiService from '../../services/swapi-service';
-
-import {
-    PersonDetails,
-    PlanetDetails,
-    StarshipDetails,
-    PersonList,
-    PlanetList,
-    StarshipList
-} from '../sw-components';
+import DummySwapiService from '../../services/dummy-swapi-service';
+import { PeoplePage, PlanetsPage, StarshipsPage } from '../pages';
+import { SwapiServiceProvider } from '../swapi-service-context';
 
 import './app.css';
-import { spawn } from 'child_process';
+import { StarshipDetails } from '../sw-components';
 
 export default class App extends Component {
 
-    swapiService = new SwapiService();
-
     state = {
-        showRandomPlanet: true
-    }
+        swapiService: new SwapiService()
+    };
 
-    toggleRandomPlanet = () => {
-        this.setState((state) => {
+    onServiceChange = () => {
+        this.setState(({ swapiService }) => {
+            const Service = swapiService instanceof SwapiService ? DummySwapiService : SwapiService;
             return {
-                showRandomPlanet: !state.showRandomPlanet
-            }
+                swapiService: new Service()
+            };
         });
     };
 
-  
-
-    componentDidCatch() {
-        this.setState({ hasError: true });
-    }
-
     render() {
-
-        // if (this.state.hasError) {
-        //     return <ErrorIndicator />
-        // }
-
-        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
-
-        const { getPerson, 
-                getStarship,
-                getPersonImage,
-                getStarshipImage } = this.swapiService;
-
-        const personDetails = (
-            <ItemDetails 
-                itemId={11}
-                getData={getPerson}
-                getImageUrl={getPersonImage} >
-                <Record field="gender" label="Gender" />
-                <Record field="eyeColor" label="Eye Color" />
-                </ItemDetails>
-        );
-
-        const starshipDetails = (
-            <ItemDetails
-                itemId={5}
-                getData={getStarship}
-                getImageUrl={getStarshipImage}
-                >
-                <Record field="model" label="Model" />
-                <Record field="length" label="Length" />
-                <Record field="costInCredits" label="Cost" />
-            </ItemDetails>
-        );
 
         return (
             <ErrorBoundry>
-                <div className="container col-lg-10">
-                    <Header />
-
-                    <PersonDetails itemId={11} />
-                    <PlanetDetails itemId={5} />
-                    <StarshipDetails itemId={9} />
-                   
-                    <PersonList />
-                    <PlanetList />
-                    <StarshipList />
-
-
-                </div>
+                <SwapiServiceProvider value={this.state.swapiService}>
+                    <Router>
+                        <div className="container col-lg-10">
+                            <Header onServiceChange={this.onServiceChange} />
+                            <RandomPlanet />
+                           
+                           <Route path="/" 
+                                  render={() => <h2>Welcome to Start DB</h2>}
+                                  exact />
+                           <Route path="/people" component={PeoplePage} />
+                           <Route path="/planets" component={PlanetsPage} />
+                           <Route path="/starships" exact component={StarshipsPage} />
+                           <Route path="/starships/:id"
+                                  render={({ match }) => {
+                                      const { id } = match.params
+                                        return <StarshipDetails itemId={id} />
+                                    }}/>
+                        </div>
+                    </Router>
+                </SwapiServiceProvider>
             </ErrorBoundry>
         );
     }

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import './item-list.css';
 
@@ -8,7 +9,6 @@ const ItemList = (props) => {
 
 
     const items = data.map((item) => {
-        console.log('itt', item);
             const { id } = item;
             const label = renderLabel(item);
             return (
@@ -26,5 +26,15 @@ const ItemList = (props) => {
         </ul>
     );
 }
+
+ItemList.defaultProps = {
+    onItemSelected: () => {}
+}
+
+ItemList.propTypes = {
+    onItemSelected: PropTypes.func,
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    children: PropTypes.func.isRequired
+};
 
 export default ItemList;

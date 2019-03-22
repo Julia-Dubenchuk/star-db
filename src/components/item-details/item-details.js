@@ -28,16 +28,18 @@ export default class ItemDetails extends Component {
     };
 
     componentDidMount() {
-        this.updatePerson();
+        this.updateItem();
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.itemId !== prevProps.itemId) {
-            this.updatePerson();
+        if (this.props.itemId !== prevProps.itemId ||
+            this.props.getData !== prevProps.getData ||
+            this.props.getImageUrl !== prevProps.getImageUrl) {
+            this.updateItem();
         }
     }
 
-    updatePerson() {
+    updateItem() {
         const { getData, itemId, getImageUrl } = this.props;
         this.setState({
             loading: true
@@ -48,7 +50,6 @@ export default class ItemDetails extends Component {
 
         getData(itemId)
             .then((item) => {
-                console.log('it', item);
                 this.setState({ 
                     item: item,
                     loading: false,
